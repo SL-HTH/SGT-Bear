@@ -1,8 +1,21 @@
-body{
+*{
   padding: 0;
   border:  0;
   margin:  0;
 
+  image-rendering: pixelated;
+
+  /*user-select:  none;
+  touch-action:  none;*/
+}
+
+:root{
+  --img_size: 64px;
+  --grid_rows: 3;
+  --grid_cols: 8;
+}
+
+body{
   text-align: center;
 
   background-color: #666;
@@ -12,3 +25,87 @@ canvas {
   background-color: #CCC;
   border: 1px solid;
 }
+
+#outer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+
+  display: grid;
+
+  grid-template-rows: repeat(3, 1fr);
+
+  max-width: 760px;
+
+  margin: 0 auto;
+
+  width: 100vw;
+  height: 100vh;
+
+  z-index: 100;
+}
+
+#outer div {
+  /*background: red;*/
+  padding: 0;
+  border: 1px solid;
+  margin: 0;
+}
+
+#container-modifiers,
+#container-controls{
+  display: grid;
+
+  gap: 8px;
+
+  grid-template-rows: repeat(var(--grid_rows)   , 1fr);
+  grid-template-columns: repeat(var(--grid_cols), 1fr);
+}
+
+p, img {
+  width:  var(--img_size);
+  height: var(--img_size);
+  border: 1px solid white;
+}
+
+#zoom-out {
+  grid-row: 2;
+}
+#mute {
+  grid-column: 8;
+}
+
+#btn-lt {
+  grid-row: 2;
+}
+
+#btn-rt {
+  grid-row: 2;
+  grid-column: 3;
+}
+
+#btn-dn {
+  grid-row: 3;
+  grid-column: 2;
+}
+
+#btn-up {
+  grid-column: 2;
+}
+
+#btn-a {
+  grid-column: 8;
+}
+
+#btn-b {
+  grid-row: 2;
+  grid-column: 7;
+}
+
+@media screen and (min-width: 760px){
+  #outer {
+    display: none;
+  }
+}
+

@@ -33,6 +33,8 @@ const ini = {
   HEIGHT: 144,
   SPRITE_SIZE: 8,
 
+  MUTED: false,
+
   SCALE: 4
 };
 
@@ -2659,6 +2661,8 @@ const init = () => {
   window.onkeydown = keyHandler;
   window.onkeyup   = keyHandler;
 
+  init_btns();
+
   ctx.imageSmoothingEnabled = false;
 
   stateStack = new StateStack();
@@ -2694,7 +2698,7 @@ const render = (dt) =>{
   //draw_grid();
 
 
-  draw_array();
+  //draw_array();
 };
 
 const draw_grid = (color="black") => {
@@ -2738,6 +2742,9 @@ window.onload = function(){
   ctx = cnv.getContext('2d');
 
   loadAssets();
+
+  init_btns();
+  
 }
 
 const loadAssets = () =>{
@@ -2888,3 +2895,96 @@ const loadHandler = f_name => {
   }
 };
 
+const init_btns = () => {
+  document.getElementById("mute").onclick = function() {
+    ini.MUTED = !ini.MUTED;
+
+    this.src= ini.MUTED ? "sound_off.png" : "sound_on.png";
+
+    if (ini.MUTED){
+      for (let o in assets.snds){
+        assets.snds[o].volume = 0;
+      }
+    }
+    else {
+      for (let o in assets.snds){
+        assets.snds[o].volume = 1;
+      }
+    }
+  };
+
+  document.getElementById("zoom-in").onclick = () => {
+    ini.SCALE = (ini.SCALE < 5) ? ini.SCALE + 1 : 5;
+    cnv.width = ini.WIDTH * ini.SCALE;
+    cnv.height = ini.HEIGHT * ini.SCALE;
+    ctx.imageSmoothingEnabled = false;
+  }
+  document.getElementById("zoom-out").onclick = () => {
+    ini.SCALE = (ini.SCALE > 1) ? ini.SCALE - 1 : 1;
+    cnv.width = ini.WIDTH * ini.SCALE;
+    cnv.height = ini.HEIGHT * ini.SCALE;
+    ctx.imageSmoothingEnabled = false;
+  }
+
+  document.getElementById("btn-lt").ontouchstart = () => {
+    keys[37]= true;
+  }
+  document.getElementById("btn-lt").ontouchmove = () => {
+    keys[37]= true;
+  }
+  document.getElementById("btn-lt").ontouchend = () => {
+    keys[37] = false;
+  }
+
+  document.getElementById("btn-up").ontouchstart = () => {
+    keys[38]= true;
+  }
+  document.getElementById("btn-up").ontouchmove = () => {
+    keys[38]= true;
+  }
+  document.getElementById("btn-up").ontouchend = () => {
+    keys[38] = false;
+  }
+
+  document.getElementById("btn-rt").ontouchstart = () => {
+    keys[39]= true;
+  }
+  document.getElementById("btn-rt").ontouchmove = () => {
+    keys[39]= true;
+  }
+  document.getElementById("btn-rt").ontouchend = () => {
+    keys[39] = false;
+  }
+
+  document.getElementById("btn-dn").ontouchstart = () => {
+    keys[40]= true;
+  }
+  document.getElementById("btn-dn").ontouchmove = () => {
+    keys[40]= true;
+  }
+  document.getElementById("btn-dn").ontouchend = () => {
+    keys[40] = false;
+  }
+
+  document.getElementById("btn-a").ontouchstart = () => {
+    keys[90]= true;
+  }
+  document.getElementById("btn-a").ontouchmove = () => {
+    keys[90]= true;
+  }
+  document.getElementById("btn-a").ontouchend = () => {
+    keys[90] = false;
+  }
+
+  document.getElementById("btn-b").ontouchstart = () => {
+    keys[88]= true;
+  }
+  document.getElementById("btn-b").ontouchmove = () => {
+    keys[88]= true;
+  }
+  document.getElementById("btn-b").ontouchend = () => {
+    keys[88] = false;
+  }
+}
+
+window.oncontextmenu = () => false;
