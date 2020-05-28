@@ -6,17 +6,19 @@
  * ---<time = duration stop
  * 
  * -MultiZero
+ * --->SQUASHED!!
+ * 
+ * 
+ * 
+ * FIXES:
+ * -Input delay
+ * ---<TESTERS DECIDE
  * 
  */
 
  /**
   * TODO:
-  * -Mobile Support
-  * --Controls
-  * --Viewport
-  * --Zoom/Scale
   * 
-  * -Meta Tags HTML
   * 
   * -Comment name
   */
@@ -34,6 +36,8 @@ const ini = {
   SPRITE_SIZE: 8,
 
   MUTED: false,
+
+  INPUT_DELAY: 0.15,
 
   SCALE: 4
 };
@@ -923,7 +927,7 @@ function PlacementState(map="no_map"){
 
     step: 2,
 
-    cooldown: 0.23,
+    cooldown: ini.INPUT_DELAY,
     timer: 0,
 
     update: function(dt){
@@ -1161,7 +1165,8 @@ function GameState(go=null, map="no_map"){
 
   
   self.label_text = {
-    p: "%move @select place#&view piece details",
+    p: "%move#@select",
+    ps: "%move @place#&skip turn",
     e: "Enemy turn"
   }
   self.label = new LabelHandler(self.label_text.p);
@@ -1183,7 +1188,7 @@ function GameState(go=null, map="no_map"){
 
     step: 2,
     timer: 0,
-    cooldown: 0.3,
+    cooldown: ini.INPUT_DELAY,
 
     next_x:  9,
     next_y: 11,
@@ -1316,6 +1321,8 @@ function GameState(go=null, map="no_map"){
       // Cancel or skip turn (B)
       if (keys[88]){
         this.selected = false;
+        setTile(this.old_x+1, this.old_y+1, this.o_pointer.tile_id, self.currentMap, 1);
+        self.turn = 'e';
       }
 
       if (this.timer >= this.cooldown){
@@ -1387,7 +1394,7 @@ function GameState(go=null, map="no_map"){
                 if ((this.x+1) * ini.SPRITE_SIZE == o.x && (this.y+1) * ini.SPRITE_SIZE == o.y){
                   // enemy
                   if (o.tile_id == 661){
-                    console.log(o.value)
+                    //console.log(o.value)
                     // I can kill?
                     if (this.o_pointer.canKill(o.value) == 1){
                       if (o.value == 0)stateStack.push(VictoryState());
@@ -1396,11 +1403,11 @@ function GameState(go=null, map="no_map"){
                     }
                     // Maybe they can kill?
                     else if (o.canKill(this.o_pointer.value) == 1){
-                      console.log("ENEMY KILL")
+                      //console.log("ENEMY KILL")
                       for (const ii in self.gameobjects){
                         if (self.gameobjects[ii].x == this.o_pointer.x && self.gameobjects[ii].y == this.o_pointer.y){
                           self.gameobjects.splice(ii, 1);
-                          console.log("SPLICE")
+                          //console.log("SPLICE")
                           this.selected = false;
                           dead = true;
                         }
@@ -1490,7 +1497,7 @@ function GameState(go=null, map="no_map"){
     this.label_timer += dt;
 
     if (this.label_timer >= this.label_cooldown)
-      this.label.change(this.label_text[this.turn]);
+      this.label.change(this.label_text[this.cursor.selected ? 'ps' : this.turn]);
 
     if (!this.can_move.p && !this.can_move.e)console.log("NO LEGAL MOVES")
 
@@ -1597,7 +1604,7 @@ function GameState(go=null, map="no_map"){
       // check player col
       for (let i in this.gameobjects){
         let o = this.gameobjects[i];
-        console.log(o.tile_id);
+        //console.log(o.tile_id);
         if (o.x == nx && o.y == ny && o.tile_id != -1){
           //console.log("player COLLISION");
           if (o.value == 0)stateStack.push(VictoryState(false));
@@ -2693,7 +2700,7 @@ const render = (dt) =>{
 
   stateStack.render();
 
-  ctx.fillText((1/dt).toPrecision(4), 34, 106);
+  //ctx.fillText((1/dt).toPrecision(4), 34, 106);
 
   //draw_grid();
 
@@ -2730,11 +2737,26 @@ const draw_array = (map="map",color="red") =>{
   }
 };
 
+// Credit https://stackoverflow.com/questions/21741841/detecting-ios-android-operating-system
+const isMobile = () => {
+  const UA = navigator.userAgent || navigator.vendor || window.opera;
+
+  return /windows phone/i.test(UA) || /android/i.test(UA) || (/iPad|iPhone|iPod/.test(UA) && !window.MSStream);
+}
 
 
 
 
 window.onload = function(){
+  if (isMobile()){
+    alert(`If the canvas is too big or small, you can now zoom!`);
+  }
+  else {
+    alert(`Arrow Keys: Move cursor\nz: button A\nx: button B`);
+  }
+  alert(`This is basically a Stratego game.\nTo learn more look online but basically, capture the enemy flag or eliminate all mobile enemies to win\nRanking explained in game\nHigher ranked enemies kill lower ranked\nBombs and flags are immobile`);
+
+  //alert(`Finally A special thanks to:\nᏳoƊoԲᎮc ! ID: 9143528\nHaris ID: 3124142\nsaantonandre ID: 6271375\n\nFor the support and testing :)`);
   cnv = document.querySelector('canvas');
   cnv.width = ini.WIDTH   * ini.SCALE;
   cnv.height = ini.HEIGHT * ini.SCALE;
