@@ -1,3 +1,11 @@
+/*
+    Author: 「ＨＡＰＰＹ ＴＯ ＨＥＬＰ」
+    Date: 31 May 2020
+    Purpose: SGT. Bear - Stratego Game new engine test
+    License: CC BY-SA 4.0 
+            https://creativecommons.org/licenses/by-sa/4.0/
+*/
+
 *{
   padding: 0;
   border:  0;
@@ -6,13 +14,15 @@
   image-rendering: pixelated;
 
   /*user-select:  none;
-  touch-action:  none;*/
+  touch-action:  none;幸*/
 }
 
+/* Variables */
 :root{
-  --img_size: 64px;
-  --grid_rows: 3;
-  --grid_cols: 8;
+  --img_size: 64px; /* Control image size */
+  --grid_rows:   3; 
+  --grid_cols:   8;
+  --img_opac:  0.4; /* Control image opacity */
 }
 
 body{
@@ -26,12 +36,14 @@ canvas {
   border: 1px solid;
 }
 
+/* Controller/UI container */
 #outer {
   position: absolute;
   top: 0;
   left: 0;
   z-index: 10;
 
+  /* 幸 Filter for color. Uncomment and change 幸 */
   /*background-color: rgba(72, 148, 21, 0.2);*/
 
   display: grid;
@@ -42,17 +54,15 @@ canvas {
 
   margin: 0 auto;
 
-  width: 100vw;
+  width:  100vw;
   height: 100vh;
 
   z-index: 100;
 }
 
 #outer div {
-  /*background: red;*/
   padding: 0;
-  border: 1px solid;
-  margin: 0;
+  margin:  0;
 }
 
 #container-modifiers,
@@ -65,10 +75,13 @@ canvas {
   grid-template-columns: repeat(var(--grid_cols), 1fr);
 }
 
-p, img {
+/* Controller Images */
+img {
   width:  var(--img_size);
   height: var(--img_size);
   border: 1px solid white;
+
+  opacity: var(--img_opac);
 }
 
 #zoom-out {
@@ -105,6 +118,7 @@ p, img {
   grid-column: 7;
 }
 
+/* 幸Remove if possible PC screen */
 @media screen and (min-width: 760px){
   #outer {
     display: none;

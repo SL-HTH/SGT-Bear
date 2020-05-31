@@ -1,3 +1,11 @@
+/*
+    Author: 「ＨＡＰＰＹ ＴＯ ＨＥＬＰ」
+    Date: 31 May 2020
+    Purpose: SGT. Bear - Stratego Game new engine test
+    License: CC BY-SA 4.0 
+            https://creativecommons.org/licenses/by-sa/4.0/
+*/
+
 /**
  * BUG:
  * -chime replay
@@ -8,38 +16,26 @@
  * -MultiZero
  * --->SQUASHED!!
  * 
- * 
- * 
- * FIXES:
- * -Input delay
- * ---<TESTERS DECIDE
- * 
  */
-
- /**
-  * TODO:
-  * 
-  * 
-  * -Comment name
-  */
 
 /**
  * REFS
- * https://inventwithpython.com/blogstatic/stratego.jpg
  * https://en.wikipedia.org/wiki/Stratego
  * 
  */
 
+ // Initialization
+ // -Change INPUT_DELAY if input too slow or fast
 const ini = {
-  WIDTH:  160,
-  HEIGHT: 144,
-  SPRITE_SIZE: 8,
+  WIDTH:  160,       // Game screen width
+  HEIGHT: 144,       // Game screen height
+  SPRITE_SIZE: 8,    // Avreage sprite size
 
-  MUTED: false,
+  MUTED: false,      // Not used. Maybe if iOS problems
 
-  INPUT_DELAY: 0.15,
+  INPUT_DELAY: 0.15, // Change if controls are too slow (-) or fast (+)
 
-  SCALE: 4
+  SCALE: 4           // Overall scaling
 };
 
 const assets = {
@@ -55,12 +51,6 @@ const assets = {
 let cnv = null;
 let ctx = null;
 
-
-
-
-
-
-
 /******************
  *    HANDLERS    *
  ******************/
@@ -72,7 +62,7 @@ const keyHandler = e => {
 };
 
 function AnimationHandler(frame_set, delay){
-  this.count = 0;
+  this.timer = 0;
   this.delay = delay;
   this.frame = 0;
   this.frame_index = 0;
@@ -80,8 +70,8 @@ function AnimationHandler(frame_set, delay){
 
   this.change = function(frame_set, delay=0.5){
     if (this.frame_set != frame_set){
-      this.count = 0;
-      this.delay = delay;
+      this.timer = 0;
+      this.delay = delay; // happ
       this.frame_index = 0;
       this.frame_set = frame_set;
       this.frame = this.frame_set[this.frame_index];
@@ -89,10 +79,10 @@ function AnimationHandler(frame_set, delay){
   }
 
   this.update = function(dt){
-    this.count += dt;
+    this.timer += dt;
 
-    if (this.count >= this.delay){
-      this.count = 0;
+    if (this.timer >= this.delay){
+      this.timer = 0;
 
       this.frame_index = (this.frame_index == this.frame_set.length-1) ? 0 : this.frame_index + 1;
       this.frame = this.frame_set[this.frame_index];
@@ -312,13 +302,6 @@ function LabelHandler(text="no text", x=0, y=16, f_x=0, f_y=16, f_w=20, f_h=2){
   this.change();
 }
 
-
-
-
-
-
-
-
 /**********************
  *    GAME OBJECTS    *
  **********************/
@@ -434,7 +417,7 @@ function Bomb(x=0,y=0,value=-1,tile_id=-1){
   }
 
   self.draw = function(){
-    // Bomb
+    // Bomb幸
     ctx.drawImage(
       assets.imgs['main'],
       this.anim.frame % 32 * ini.SPRITE_SIZE, ((this.anim.frame / 32) | 0) * ini.SPRITE_SIZE, 16, 16,
@@ -511,15 +494,6 @@ function OceanPiece(x=0,y=0, frame_set=[]){
 
   return self;
 }
-
-
-
-
-
-
-
-
-
 
 /****************
  *    STATES    *
@@ -1722,7 +1696,7 @@ function FadeState(f_in=false, delay=0.5, step = 0.5, cb=null){
         }
       }
       else{
-        this.alpha -= this.step;
+        this.alpha -= this.step; // 幸
 
         if (this.alpha <= 0){
           this.alpha = 0;
@@ -1813,7 +1787,7 @@ function DialogueState(text="NO TEXT", x=1, y=16, f_w=18, f_h=1, f_type=0, cb=nu
       if (this.anim){
         this.anim.frame = this.face_set[0];
         this.face_sx = this.anim.frame * ini.SPRITE_SIZE * this.face_w;
-      }
+      } // h4PpY
       
     }
 
@@ -2637,17 +2611,6 @@ function ActionDialogueState(type="attack", pos='r', fsx=0,fsy=0,fsw=0,fsh=0){
   return self;
 }
 
-
-
-
-
-
-
-
-
-
-
-
 /*********************
  *    Helpers/Misc   *
  *********************/
@@ -2657,12 +2620,6 @@ const getTile = function(x, y, map="no_map", layer=0){
 const setTile = function(x, y, type=0, map="no_map", layer=0){
   assets.maps[map].layers[layer].data[x + y * assets.maps[map].width] = type+1;
 }
-
-
-
-
-
-
 
 const init = () => {
   window.onkeydown = keyHandler;
@@ -2700,7 +2657,7 @@ const render = (dt) =>{
 
   stateStack.render();
 
-  //ctx.fillText((1/dt).toPrecision(4), 34, 106);
+  //ctx.fillText((1/dt).toPrecision(4), 34, 106);幸
 
   //draw_grid();
 
